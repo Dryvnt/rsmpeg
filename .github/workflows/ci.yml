@@ -193,7 +193,6 @@ jobs:
           if [ '${{ matrix.rust }}' == '1.81.0' ]; then
             # force dependencies to latest version compatible with rustc 1.81.0
             cargo update darling --precise 0.21.3
-            cargo update image --precise 0.25.6
           fi
           if [ '${{ matrix.should_test }}' == 'true' ]; then
             if [ '${{ matrix.valgrind }}' == 'valgrind' ]; then
