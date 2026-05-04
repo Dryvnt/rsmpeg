@@ -186,14 +186,15 @@ jobs:
 
       - name: Build Linux FFmpeg
         run: bash utils/linux_ffmpeg.rs ${{ matrix.ffmpeg-version }}
+      
+      - name: Update transient dependencies to version compatible with rustc 1.81.0
+        if: ${{ matrix.rust == '1.81.0' }}
+        run: |
+          cargo update darling --precise 0.21.3
 
       - name: Test
         run: |
           export FFMPEG_PKG_CONFIG_PATH=${PWD}/tmp/ffmpeg_build/lib/pkgconfig
-          if [ '${{ matrix.rust }}' == '1.81.0' ]; then
-            # force dependencies to latest version compatible with rustc 1.81.0
-            cargo update darling --precise 0.21.3
-          fi
           if [ '${{ matrix.should_test }}' == 'true' ]; then
             if [ '${{ matrix.valgrind }}' == 'valgrind' ]; then
               cargo valgrind test ${{ matrix.additional-cargo-flags }}
@@ -288,6 +289,11 @@ jobs:
         with:
           version: "10.0"
           directory: ${{ github.workspace }}/clang
+
+      - name: Update transient dependencies to version compatible with rustc 1.81.0
+        if: ${{ matrix.rust == '1.81.0' }}
+        run: |
+          cargo update darling --precise 0.21.3
 
       # `--tests` to disable glfw-sys building on windows_x86(which is currently not working)
       - env:
